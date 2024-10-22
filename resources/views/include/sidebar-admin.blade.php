@@ -73,6 +73,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ route('barang.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Barang
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('acara.index') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>

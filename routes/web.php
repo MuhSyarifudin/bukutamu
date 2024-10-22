@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcaraController;
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengunjungController;
 use App\Http\Controllers\ProfileController;
@@ -25,6 +26,8 @@ Route::get('pengunjung',[PengunjungController::class,'index'])->name('pengunjung
 Route::get('pengunjung/v',[PengunjungController::class,'index2'])->name('tampilkan.pengunjung');
 
 Route::get('acara',[AcaraController::class,'index'])->name('acara.index');
+
+Route::get('barang',[BarangController::class,'index'])->name('barang.index');
 
 Route::get('/dashboard',[DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

@@ -126,7 +126,7 @@
                       <div class="form-group">
                         <label for="tanggal">Tanggal:</label>
                         <div class="input-group date" id="reservationdate_2" data-target-input="nearest">
-                          <input type="text" id="edit-tanggal" class="form-control datetimepicker-input" data-target="#reservationdate">
+                          <input type="text" id="edit-tanggal" class="form-control datetimepicker-input" data-target="#reservationdate_2">
                           <div class="input-group-append" data-target="#reservationdate_2" data-toggle="datetimepicker">
                               <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                           </div>

@@ -6,6 +6,7 @@ use App\Models\Acara;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use DateTime;
 
 class AcaraApiController extends Controller
 {
@@ -89,10 +90,24 @@ class AcaraApiController extends Controller
         $date_string = strtotime($request->tanggal);
         $tanggal = date('Y-m-d',$date_string);
 
-        Acara::where('id',$id)->update([
-            'nama'=>$nama,
-            'tanggal'=>$tanggal
+        $tanggalisnull = Acara::find($id);
+
+        if ($request->tanggal) {
+            $date = DateTime::createFromFormat('d/m/Y', $request->tanggal);
+            if ($date) {
+                $tanggal = $date->format('Y-m-d');
+            } else {
+                $tanggal = $tanggalisnull->tanggal;
+            }
+        } else {
+            $tanggal = $tanggalisnull->tanggal;
+        }
+
+        Acara::find($id)->update([
+            'nama' => $nama,
+            'tanggal' => $tanggal
         ]);
+        
     }
 
     /**
