@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>BukuTamu | {{ $title }}</title>
+  <title>{{ config('app.name', 'Laravel').' | '.$title}}</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -45,7 +45,5 @@
 
 @stack('js')
 
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ url('/dist/js/pages/dashboard2.js') }}"></script>
 </body>
 </html>

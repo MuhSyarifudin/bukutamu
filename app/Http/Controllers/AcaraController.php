@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
-use Exception;
 use App\Models\Acara;
 use Illuminate\Http\Request;
 
@@ -32,19 +30,7 @@ class AcaraController extends Controller
      */
     public function store(Request $request)
     {
-        $nama_acara = $request->nama;
-        $tanggal_acara = $request->tanggal;
-
-        $date_convert = strtotime($tanggal_acara);
-
-        $converted_date = date('Y-m-d',$date_convert);
-
-        Acara::create([
-            'nama'=>$nama_acara,
-            'tanggal'=>$converted_date
-        ]);
-
-        return back();
+        //
     }
 
     /**
@@ -69,20 +55,7 @@ class AcaraController extends Controller
     public function update(Request $request, $id)
     {
 
-        $nama_acara = $request->nama;
-        $tanggal_acara = $request->tanggal;
-
-        $date_convert = strtotime($tanggal_acara);
-
-        $converted_date = date('Y-m-d',$date_convert);
-
-
-        Acara::where('id',$id)->update([
-            'nama'=>$nama_acara,
-            'tanggal'=>$converted_date
-        ]);
-
-        return back();
+        //
     }
 
     /**
@@ -90,9 +63,7 @@ class AcaraController extends Controller
      */
     public function destroy($id)
     {
-        Acara::where('id',$id)->delete();
-
-        return back();
+        //
     }
 
    
