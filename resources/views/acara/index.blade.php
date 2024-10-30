@@ -388,7 +388,7 @@
         format: 'L'
     });
 
-    //Date picker
+    //Date picker 2
    $('#reservationdate_2').datetimepicker({
         format: 'L'
     });
