@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
 use App\Models\Pengunjung;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PengunjungApiController extends Controller
 {
@@ -49,6 +51,8 @@ class PengunjungApiController extends Controller
            'uang.required'=>'Nominal uang tidak boleh kosong!',
         ]);
 
+        $user = User::where('id',Auth::user()->id)->first();
+
         //menyimpan data pengunjung
         $nama = $request->nama;
         $alamat = $request->alamat;
@@ -64,6 +68,7 @@ class PengunjungApiController extends Controller
                 'no_telp'=>$notelp,
                 'uang'=>$uang,
                 'status'=>$status,
+                'user_id'=>$user->id,
                 'acara_id'=>$acara_id
             ]);
         }
@@ -96,6 +101,20 @@ class PengunjungApiController extends Controller
     public function update(Request $request)
     {
         //mengubah data pengunjung
+
+        $validated = $request->validate([
+            'nama'=>'required|max:30',
+            'alamat'=>'required',
+            'uang'=>'required',
+            'status'=>'required'
+        ],['nama.required'=>'Nama pengunjung tidak boleh kosong!',
+           'nama.max'=>'Nama pengunjung maksimal 30 karakter!',
+           'alamat.required'=>'Alamat pengunjung tidak boleh kosong!',
+           'uang.required'=>'Nominal uang tidak boleh kosong!',
+        ]);
+
+        $user = User::where('id',Auth::user()->id)->first();
+
         $id = $request->id;
         $nama = $request->nama;
         $alamat = $request->alamat;
@@ -110,6 +129,7 @@ class PengunjungApiController extends Controller
             'no_telp'=>$notelp,
             'uang'=>$uang,
             'status'=>$status,
+            'user_id'=>$user->id,
             'acara_id'=>$acara_id
         ]);
     }

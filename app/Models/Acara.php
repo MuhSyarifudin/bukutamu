@@ -10,6 +10,6 @@ class Acara extends Model
     use HasFactory;
 
     protected $table = 'acara';
-    protected $fillable = ['nama','tanggal'];
+    protected $fillable = ['nama','tanggal','user_id'];
     public $timestamps = true;
 }

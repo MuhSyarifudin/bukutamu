@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nama_pengunjung');
             $table->string('nama_barang');
-            $table->text('catatan');
+            $table->text('catatan')->nullable();
+            $table->string('alamat');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('acara_id');
             $table->timestamps();
         });
     }

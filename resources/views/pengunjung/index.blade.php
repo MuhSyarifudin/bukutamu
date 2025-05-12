@@ -67,12 +67,22 @@
                 </div>
               </form>
             </div>
-            <div class="offset-md-8">
-              <div class="col col-md-1">
-                @if ($acara_id != "" || $acara_id != 0)
-                <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#modal-tambah-data"> <i class="fas fa-plus"></i> </button>
-                @endif
-            </div>
+            <div class="offset-md-10 col-md-2">
+              @if ($acara_id != "" && $acara_id != 0)
+                  <div class="d-flex justify-content-end mb-4">
+                      <button type="button" title="Tambah Data" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modal-tambah-data">
+                          <i class="fas fa-plus"></i>
+                      </button>
+                      <button type="button" title="Export Excell" onclick="window.location.href='{{ route('export.pengunjung',['acara_id'=>$acara_id]) }}'" id="exportButton" class="btn btn-success mr-2">
+                        <i class="fas fa-file-excel"></i>
+                      </button>
+                      <button type="button" onclick="window.location.href=''" id="exportButton" class="btn btn-secondary">
+                        <i class="fas fa-print"></i>
+                      </button>
+                  </div>
+              @endif
+          </div>
+          
           </div>
 
           <div class="modal fade" id="modal-tambah-data">
@@ -127,9 +137,7 @@
           <!-- /.modal -->
         
            {{-- @livewire('pengunjung',['acara_id'=>$acara_id]) --}}
-
-          </div>
-
+          
            {{-- @livewire('TabelPengunjung',['acara_id'=>$acara_id]) --}}
            <table id="pengunjung_table" class="table table-bordered table-striped" style="width: 100%">
             <thead>
@@ -147,8 +155,13 @@
               <tr></tr>
             </tbody>    
           </table>            
+
+          </div>
+
+
     
-        <!-- Modal Konfirmasi Hapus -->
+
+          <!-- Modal Konfirmasi Hapus -->
         <div class="modal fade" id="modal-delete-confirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -162,8 +175,8 @@
                       Apakah Anda yakin ingin menghapus <strong id="data-name"></strong> ?
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                      <button type="button" class="btn btn-danger" id="confirm-delete">Hapus</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                   </div>
               </div>
           </div>
@@ -245,19 +258,33 @@
 <script src="{{ url('/plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- Page specific script -->
 <script>
+
   $(function () {
 
-    let table = $('#pengunjung_table').DataTable({
+        let token = document.querySelector('meta[name="api-token"]').getAttribute('content');
+
+        let table = $('#pengunjung_table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('pengunjung.index.json',['id'=>$acara_id == null ? 0 : $acara_id]) }}",
+        ajax: {
+            url: "{{ route('pengunjung.index.json',['id'=>$acara_id == null ? 0 : $acara_id]) }}",
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
+            error: function (xhr, error, thrown) {
+                console.error("AJAX Error:", xhr.responseText);
+            }
+        },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'nama', name: 'nama'},
             {data: 'alamat', name: 'alamat'},
             {data: 'no_telp', name: 'no_telp'},
             {data: 'uang', name: 'uang'},
-            {data: 'status', name: 'status',
+            {
+                data: 'status', name: 'status',
                 render: function (data, type, row) {
                     if (data == '1') {
                         return 'Lunas';
@@ -268,24 +295,22 @@
                     }
                 }
             },
-            {data: 'action', name: 'action',
+            {
+                data: 'action', name: 'action',
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
                 render: function (data, type, row) {
                     var btn_edit = `<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-edit" data-id="${row.id}" id="btn-edit"><i class="fas fa-pencil-alt"></i></button>`;
                     var btn_destroy = `<button class="btn btn-danger ml-1" id="btn-delete" data-id="${row.id}" data-nama="${row.nama}"><i class="fas fa-trash-alt"></i></button>`;
-    
+
                     return btn_edit + btn_destroy;
                 }
             }
         ],
         rowId: 'id'
     });
-    
-    
-    
-    
+     
         $('#pengunjung_table').on('draw.dt', function() {
     
         const editButtons = document.querySelectorAll('#btn-edit');
@@ -297,6 +322,10 @@
             $.ajax({
                 url: "{{ route('pengunjung.edit',['id'=>'__id__']) }}".replace('__id__',id),
                 type: 'GET',
+                headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+                },
                 success: function(data) {
     
                     $('#edit-acara-id').val({{ $acara_id }});
@@ -336,6 +365,10 @@
           $.ajax({
               url: "{{ route('pengunjung.delete.json',['id'=>'__id__']) }}".replace('__id__',id),
               type: "DELETE",
+              headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+              },
               success: function(data){ 
                 $('#modal-delete-confirm').modal('hide');
                 $('#pengunjung_table').DataTable().row('id').remove().draw();
@@ -356,6 +389,10 @@
           $.ajax({
         url: "{{ route('pengunjung.store.json') }}",
         type: 'POST',
+        headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
         data: {
             _token: "{{ csrf_token() }}",
             nama: $('#nama').val(),
@@ -402,6 +439,10 @@
           $.ajax({
             url: "{{ route('pengunjung.update.json') }}",
             type: 'PUT',
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
             data: {
               _token: "{{ csrf_token() }}",
               id: $('#edit-id').val(),

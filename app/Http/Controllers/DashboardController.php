@@ -6,6 +6,7 @@ use App\Models\Pengunjung;
 use Illuminate\Http\Request;
 use Akaunting\Money\Money;
 use App\Models\Acara;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -14,11 +15,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $jmlh_uang = Pengunjung::sum('uang');
-        $jmlh_pengunjung = Pengunjung::count();
-        $jmlh_acara = Acara::count();
+        $jmlh_uang = Pengunjung::where('user_id',Auth::user()->id)->sum('uang');
+        $jmlh_pengunjung = Pengunjung::where('user_id',Auth::user()->id)->count();
+        $jmlh_acara = Acara::where('user_id',Auth::user()->id)->count();
 
-        return view('dashboard',['title'=>'Dashboard','jmlh_uang'=>Money::IDR($jmlh_uang,true),'jmlh_pengunjung'=>$jmlh_pengunjung,'jmlh_acara'=>$jmlh_acara]);
+        return view('dashboard',['title'=>'Dashboard','jmlh_uang'=>Money::IDR($jmlh_uang,true),'jmlh_pengunjung'=>$jmlh_pengunjung,'jmlh_acara'=>$jmlh_acara,'active_menu'=>'dashboard']);
     }
 
     /**

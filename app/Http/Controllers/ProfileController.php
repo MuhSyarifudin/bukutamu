@@ -18,6 +18,8 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'title'=>'Profile',
+            'active_menu'=>'profile'
         ]);
     }
 

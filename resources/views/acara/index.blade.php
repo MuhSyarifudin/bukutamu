@@ -44,7 +44,7 @@
 
             <div class="offset-md-11">
 
-                <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#modal-tambah-data"> <i class="fas fa-plus"></i> </button>
+                <button type="button" class="btn btn-primary mb-4" title="Tambah Data" data-toggle="modal" data-target="#modal-tambah-data"> <i class="fas fa-plus"></i> </button>
                  
                 <div class="modal fade" id="modal-tambah-data">
                  <div class="modal-dialog">
@@ -159,8 +159,8 @@
                       Apakah Anda yakin ingin menghapus <strong id="data-name"></strong> ?
                   </div>
                   <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Hapus</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                      <button type="button" class="btn btn-danger" id="confirm-delete">Hapus</button>
                   </div>
               </div>
           </div>
@@ -209,6 +209,8 @@
 
 <script>
 
+    let token = document.querySelector('meta[name="api-token"]').getAttribute('content');
+
     $('#modal-tambah-data').on('hidden.bs.modal', function () {
         $(this).find('input').val('');
         $('.text-danger').text('');   
@@ -222,7 +224,14 @@
     let table = $('#acara_table').DataTable({
       processing: true,
       serverSide: true,
-      ajax: "{{ route('acara.index.json') }}",
+      ajax: {
+        url: "{{ route('acara.index.json') }}",
+        type: 'GET',
+        headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
+      },
       columns: [
         {data: "DT_RowIndex",name: "DT_RowIndex"},
         {data: "nama",name: "nama"},
@@ -258,6 +267,10 @@
         $.ajax({
             url: "{{ route('acara.edit',['id'=>'__id__']) }}".replace('__id__',id),
             type: 'GET',
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
             success: function(data) {
                  // Parsing the date from the response (assuming data.tanggal is in 'YYYY-MM-DD' format)
                 let originalDate = new Date(data.tanggal);
@@ -317,6 +330,10 @@
           $.ajax({
               url: "{{ route('acara.delete.json',['id'=>'__id__']) }}".replace('__id__',id),
               type: "DELETE",
+              headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+              },
               success: function(data){ 
                 $('#modal-delete-confirm').modal('hide');
                 $('#acara_table').DataTable().row('id').remove().draw();
@@ -334,6 +351,10 @@
           $.ajax({
             url: "{{ route('acara.update.json') }}",
             type: 'PUT',
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
             data: {
               _token: "{{ csrf_token() }}",
               id: $('#edit-id').val(),
@@ -357,6 +378,10 @@
           $.ajax({
             url: "{{ route('acara.store.json') }}",
             type: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            },
             data: {
               _token : "{{ csrf_token() }}",
               nama: $('#nama').val(),

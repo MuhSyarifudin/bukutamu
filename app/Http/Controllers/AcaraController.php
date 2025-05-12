@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acara;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AcaraController extends Controller
 {
@@ -12,9 +14,8 @@ class AcaraController extends Controller
      */
     public function index()
     {
-        $acara = Acara::all();
 
-        return view('acara.index',['title'=>'Acara','acara'=>$acara]);
+        return view('acara.index',['title'=>'Acara','active_menu'=>'acara']);
     }
 
     /**

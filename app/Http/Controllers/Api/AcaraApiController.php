@@ -6,7 +6,9 @@ use App\Models\Acara;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 
 class AcaraApiController extends Controller
 {
@@ -16,13 +18,15 @@ class AcaraApiController extends Controller
     public function index()
     {
         //mendapatkan data acara
-        
-       return DataTables::of(Acara::all())
+        // dd(Auth::user()->id);
+        $user = User::where('id',Auth::user()->id)->first();
+       return DataTables::of(Acara::where('user_id',$user->id)->get())
         ->addIndexColumn()
         ->editColumn('tanggal',function($row){
             $date_convert = strtotime($row->tanggal);
             return dateid('l,j F Y',$date_convert);
         })->make(true);
+        
     }
 
     /**
@@ -54,6 +58,7 @@ class AcaraApiController extends Controller
 
         Acara::create([
             'nama'=>$nama,
+            'user_id'=>Auth::user()->id,
             'tanggal'=>$tanggal
         ]);
 

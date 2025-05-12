@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Acara;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PengunjungController extends Controller
 {
@@ -11,26 +14,25 @@ class PengunjungController extends Controller
      * Display a listing of the resource.
      */
 
+    // protected $token;
     public $acara_id;
 
     public function index()
     {
         $acara_id = null;
-        $acara = Acara::all();
 
-        return view('pengunjung.index',['title'=>'Pengunjung','acara'=>$acara,'acara_id'=>$acara_id]);
+        $acara = Acara::where('user_id',Auth::user()->id)->get();
+
+        return view('pengunjung.index',['title'=>'Pengunjung','acara'=>$acara,'acara_id'=>$acara_id,'active_menu'=>'pengunjung']);
     }
 
     public function index2(Request $request){
 
-            $this->acara_id = $request->_acara;
+        $this->acara_id = $request->_acara;
 
-        //dd($this->acara_id);
-
-        $acara = Acara::all();
-
+        $acara = Acara::where('user_id',Auth::user()->id)->get();
         
-        return view('pengunjung.index',['title'=>'Pengunjung','acara'=>$acara,'acara_id'=>$this->acara_id]);
+        return view('pengunjung.index',['title'=>'Pengunjung','acara'=>$acara,'acara_id'=>$this->acara_id,'active_menu'=>'pengunjung']);
     }
 
     /**

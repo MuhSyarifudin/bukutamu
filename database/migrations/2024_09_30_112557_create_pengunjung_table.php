@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('no_telp')->nullable();
             $table->string('uang');
             $table->boolean('status');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('acara_id');
             $table->timestamps();
         });
